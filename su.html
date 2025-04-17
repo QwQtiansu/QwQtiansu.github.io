@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>示例 - 侧边目录</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 侧边目录 */
+        #toc-sidebar {
+            width: 250px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #dee2e6;
+            overflow-y: auto;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        /* 内容区域 */
+        .content-container {
+            flex: 1;
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 章节样式 */
+        .chapter {
+            display: none;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chapter.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        /* 分页按钮 */
+        .pagination {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* 目录链接 */
+        .toc-link {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .toc-link:hover {
+            background: #e9ecef;
+        }
+
+        .toc-link.active {
+            background: #007bff;
+            color: white;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            #toc-sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .content-container {
+                padding: 20px;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+            margin-bottom: 1em;
+        }
+    </style>
+</head>
+<body>
+    <!-- 左侧目录 -->
+    <nav id="toc-sidebar">
+        <h2>目录</h2>
+        <ul>
+            <li><a href="#chapter1" class="toc-link active">第一章 简介</a></li>
+            <li><a href="#chapter2" class="toc-link">第二章 基础知识</a></li>
+            <li><a href="#chapter3" class="toc-link">第三章 高级内容</a></li>
+            <li><a href="#chapter4" class="toc-link">第四章 结论</a></li>
+        </ul>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="content-container">
+        <!-- 章节内容 -->
+        <div id="chapter1" class="chapter active">
+            <h2>第一章 简介</h2>
+            <p>这里是第一章的内容...</p>
+        </div>
+
+        <div id="chapter2" class="chapter">
+            <h2>第二章 基础知识</h2>
+            <p>这里是第二章的内容...</p>
+        </div>
+
+        <div id="chapter3" class="chapter">
+            <h2>第三章 高级内容</h2>
+            <p>这里是第三章的内容...</p>
+        </div>
+
+        <div id="chapter4" class="chapter">
+            <h2>第四章 结论</h2>
+            <p>这里是第四章的内容...</p>
+        </div>
+
+        <!-- 分页控制 -->
+        <div class="pagination">
+            <button onclick="previousChapter()">上一页</button>
+            <button onclick="nextChapter()">下一页</button>
+        </div>
+    </div>
+
+    <script>
+        // 章节管理
+        const chapters = document.querySelectorAll('.chapter');
+        const tocLinks = document.querySelectorAll('.toc-link');
+        let currentChapter = 0;
+
+        // 显示指定章节
+        function showChapter(index) {
+            chapters.forEach(chapter => chapter.classList.remove('active'));
+            chapters[index].classList.add('active');
+            
+            tocLinks.forEach(link => link.classList.remove('active'));
+            tocLinks[index].classList.add('active');
+            
+            currentChapter = index;
+        }
+
+        // 导航功能
+        function previousChapter() {
+            if (currentChapter > 0) {
+                showChapter(currentChapter - 1);
+            }
+        }
+
+        function nextChapter() {
+            if (currentChapter < chapters.length - 1) {
+                showChapter(currentChapter + 1);
+            }
+        }
+
+        // 目录点击事件
+        tocLinks.forEach((link, index) => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showChapter(index);
+            });
+        });
+
+        // 键盘控制
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') previousChapter();
+            if (e.key === 'ArrowRight') nextChapter();
+        });
+
+        // 初始化显示
+        showChapter(0);
+    </script>
+</body>
+</html>
